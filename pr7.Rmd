@@ -1,0 +1,184 @@
+---
+title: "Práctica 7"
+author: "Mario Vázquez Reyes"
+date: "2023-03-14"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Ejercicio 1
+
+Aplica un contraste de hipótesis basado en la media a 
+y1 
+y1 e y2
+
+```{r cars}
+x <- rbinom(1000,1,prob = 0.1)
+y <- rbinom(1000,1,prob = 0.1)
+
+muestra1 <- rnorm(1000)
+muestra2 <- rnom(1000)
+
+y1 <- x*muestra1
+y2 <- y*muestra2
+
+hist(y1)
+hist(y2)
+
+set.seed(1)
+z <- rnorm(100)
+x <- rpois(100, 10.3)
+y <- rbinom(100, 1, 0.25)
+y1 <- 5*z+x*10+rnorm(100,2,1)
+y2 <- 5*z+x*12+rnorm(100,2,1)
+
+hist(y1)
+hist(y2)
+
+```
+
+## Ejercicio 2
+
+¿Por qué decimos que la correlación lineal es una prueba de correlación paramétrica?
+¿En qué se diferencian las pruebas paramétricas de las no paramétricas?
+
+Decimos que la correlacion lineal es una prueba de correlacion parametrixa porque en ella, las variables tienen una relacion lineal unas con otras.Las pruebas paramatricas necesitan el cumplimiento de requisitos parametricos de las distribuciones de los datos, al contrario que las no parametricas. 
+
+## Ejercicio 3
+
+Calcula la correlación entre las variables almacenadas en la tabla ‘data’. ¿Qué
+variables se encuentran más asociadas?
+
+```{r cars}
+cor <- cor(data$longitud, data$ancho)
+cor
+cor2 <- cor(data$grosor, data$peso)
+cor2
+
+```
+
+## Ejercicio 4
+
+Calcula los coeficientes de correlación de las variables junto con el nivel de
+significancia (p-value) en 1 solo gráfico. Interpreta los resultados.
+
+```{r cars}
+install.packages("GGally")
+library(GGally)
+cmat <- cor(data)
+pm <- cor.mtest(data)$p
+pm
+ggcorr(cmat, p.mat = pm, label = TRUE, label_round = 2)
+
+```
+
+## Ejercicio 5
+
+Emplea una función para obtener en una matriz de correlación lineal, IC 95% y p-
+value de todas las variables en el data frame ‘data’.
+
+```{r cars}
+library(correlation)
+resultados <- correlation(data)
+resultados
+
+```
+
+## Ejercicio 6
+
+Visualiza gráficamente la correlación lineal existente entre las variables ‘longitud’ y
+‘peso’. 
+
+```{r cars}
+plot(data$longitud, data$peso, xlab="Longitud", ylab="Peso")
+aj <- lm(peso ~ longitud, data=data)
+abline(aj, col="lightblue")
+
+```
+
+## Ejercicio 7
+
+Emplea la librería `corrplot()` para visualizar la correlación entre variables. 
+
+```{r cars}
+library(corrplot)
+library(see)
+install.packages("tidygraph")
+library(tidygraph)
+install.packages("ggraph")
+library(ggraph)
+g1 <- plot(resultados)
+g1
+
+```
+
+## Ejercicio 8
+
+Emplea la librería `corrplot()` para visualizar la correlación entre variables. 
+
+```{r cars}
+#a
+distancia <- c(1.1, 100.2, 90.3, 5.4, 57.5, 6.6, 34.7, 65.8, 57.9, 86.1)
+n_piezas <- c(110, 2, 6, 98, 40, 94, 31, 5, 8, 10)
+datf <- data.frame(distancia = distancia, n_piezas = n_piezas)
+
+#b
+cb <- cor(datf$distancia, datf$n_piezas)
+cb
+
+#c
+tc <- cor.test(distancia, n_piezas)
+print(tc)
+
+
+#d
+t <- cor.test(distancia, n_piezas, conf.level = 0.95)
+print(t$conf.int)
+
+#e
+#Como el coeficiente de correlacion tiene un valor cerca de 0, no hay una relacion lineal. 
+
+#f
+#Sí porque nos muestra que las variables tienen una relación negativa.  
+
+#g
+#Dado que el tamaño de la muestra tiene un valor muy pequeño resulta complicado ser preciso con la estimacion
+
+```
+## Ejercicio 9
+
+Explícame con un ejemplo en R la diferencia entre una relación lineal y monótona entre 2 variables.
+
+```{r cars}
+#Con la funcion rnorm generamos 100 numeros aleatrorios para dos variables, x e y. 
+x <- rnorm(100)
+y <-rnorm(100)
+
+#Con plot se hace un diagrama de dispersion de las dos variables para ver como se relacionan entre ellas. 
+plot(x, y)
+
+#Se calcula el coeficiente de correlacion con cor. 
+cor(x, y)
+#El coeficiente de correlacion es de 0,9181564, indicando una relacion lineal positiva ya que este valor se encuentra cercano a 0. 
+
+```
+
+## Ejercicio 10
+
+¿Qué tipo de prueba de correlación se aplica a las variables que experimentan una
+relación monótona? Expón un ejemplo en R.
+
+```{r cars}
+#Para las variables con relacion monotona se usa la correlacion de Spearman donde las variables estan a una escala ordinal. 
+#De nuevo, se crean dos variables como x e y para despues aplicarle la correlacion de Spearman con cor.test. 
+x <- c(1, 3, 4, 6, 7, 9, 10)
+y <- c(2, 4, 5, 7, 8, 10, 11)
+
+cor.test(x, y, method = "spearman")
+
+```
